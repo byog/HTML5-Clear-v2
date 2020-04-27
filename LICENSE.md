@@ -1,4 +1,4 @@
-Copyright (c) 2012 Yuxi Evan You
+Copyright (c) 2020 Lean
 
 The interface design of the software is the intellectual property of the creators of the original iOS Clear app, Realmac Software, Helftone and Impending, Inc. The software open sourced here in this repository is intended to be used for technical reference only. Owners of copies of the software are free to use, copy, mofidy, merge and distribute the software, but are not permitted to engage in commercial acts such as publishing, sublicensing, and/or selling copies of the Software.
 

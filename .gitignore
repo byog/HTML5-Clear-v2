@@ -1,3 +1,8 @@
+# Config files for tools
+commitlint.config.js
+package-lock.json
+package.json
+
 # Vscode
 .vscode/*
 !.vscode/settings.json
