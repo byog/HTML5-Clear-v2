@@ -1,30 +1,50 @@
+/**
+ * @class
+ * @hideconstructor
+ * @classdesc app's listcollection
+ * @extends C
+ * @name listCollection
+ */
 C.listCollection = {
-
+    /**
+     * @static
+     * @constant {Object}
+     * @default C.Collection
+     * @name listCollection.__proto__
+     */
     __proto__: C.Collection,
 
+    /**
+     * @function
+     * @static
+     * @name listCollection.init
+     */
     init: function () {
+        C.log('ListCollection: init')
 
-        C.log('ListCollection: init');
-
-        this.stateType = C.states.LIST_COLLECTION_VIEW;
-        this.base = C.Collection;
-        this.itemType = C.ListItem;
-        this.itemTypeText = 'List';
+        this.stateType = C.states.LIST_COLLECTION_VIEW
+        this.base = C.Collection
+        this.itemType = C.ListItem
+        this.itemTypeText = 'List'
 
         // apply shared init
-        this.base.init.apply(this, arguments);
+        this.base.init.apply(this, arguments)
 
         // private init jobs
-        this.updateColor();
-        this.updatePosition();
+        this.updateColor()
+        this.updatePosition()
 
-        this.openedAt = -1; // used to record currently opened list
-
+        this.openedAt = -1 // used to record currently opened list
     },
 
+    /**
+     * @function
+     * @static
+     * @name listCollection.render
+     */
     render: function () {
-
-        this.el = $('<div id="list-collection" class="collection">\
+        this.el = $(
+            '<div id="list-collection" class="collection">\
                         <div class="credit">Made by Evan You <br> Original iOS app by Realmac</div>\
                         <div class="item dummy-item top list-item empty">\
                             <div class="slider" style="background-color:rgb(23,128,247)"><div class="inner">\
@@ -32,150 +52,177 @@ C.listCollection = {
                                 <div class="count">0</div>\
                             </div></div>\
                         </div>\
-                    </div>');
+                    </div>'
+        )
 
-        this.style = this.el[0].style;
-
+        this.style = this.el[0].style
     },
 
+    /**
+     * @function
+     * @static
+     * @name listCollection.load
+     */
     load: function () {
-
-        this.initiated = true;
-        this.el.appendTo(C.$wrapper);
-
+        this.initiated = true
+        this.el.appendTo(C.$wrapper)
     },
 
-    // open when a ListItem is tapped.
+    /**
+     * open when a ListItem is tapped
+     * @function
+     * @static
+     * @name listCollection.open
+     * @param {*} at
+     */
     open: function (at) {
+        this.openedAt = at
 
-        this.openedAt = at;
-
-        var t = this;
+        var t = this
 
         // move current and up to top, drop anything below
         var i = t.items.length,
             item,
-            ty;
+            ty
         while (i--) {
-            item = t.items[i];
+            item = t.items[i]
             if (item.data.order <= at) {
-                ty = (item.data.order - at) * C.ITEM_HEIGHT - t.y;
+                ty = (item.data.order - at) * C.ITEM_HEIGHT - t.y
             } else {
-                ty = C.client.height + (item.data.order - at) * C.ITEM_HEIGHT - t.y;
+                ty =
+                    C.client.height +
+                    (item.data.order - at) * C.ITEM_HEIGHT -
+                    t.y
             }
-            item.moveY(ty);
+            item.moveY(ty)
         }
 
         // listen for transition end on the last item
         item.onTransitionEnd(function () {
-            t.positionForPulldown();
-        });
-
+            t.positionForPulldown()
+        })
     },
 
-    // position the collection for pulldown from a TodoCollection.
+    /**
+     * position the collection for pulldown from a TodoCollection
+     * @function
+     * @static
+     * @name listCollection.positionForPulldown
+     */
     positionForPulldown: function () {
-
-        var t = this;
-        t.el.hide();
+        var t = this
+        t.el.hide()
 
         setTimeout(function () {
-            t.updatePosition();
-            t.moveY(-t.height - C.ITEM_HEIGHT);
-            t.el
-                .addClass('drag')
-                .show();
-        }, 0);
-
+            t.updatePosition()
+            t.moveY(-t.height - C.ITEM_HEIGHT)
+            t.el.addClass('drag').show()
+        }, 0)
     },
 
-    // position the collection for pinch in from a TodoCollection.
-    positionForPinchIn: function () {
+    /**
+     * position the collection for pinch in from a TodoCollection
+     * @function
+     * @static
+     * @name listCollection.positionForPinchIn
+     */
+    positionForPinchIn: function () {},
 
-    },
-
+    /**
+     * @function
+     * @static
+     * @name listCollection.onDragMove
+     */
     onDragMove: function () {
+        this.base.onDragMove.apply(this, arguments)
 
-        this.base.onDragMove.apply(this, arguments);
-
-        var ltc = C.lastTodoCollection;
+        var ltc = C.lastTodoCollection
 
         // long pull down
         if (this.y <= this.upperBound) {
             if (!this.longPullingUp) {
-                this.longPullingUp = true;
-                ltc.el.addClass('drag');
-                ltc.topSwitch.show();
+                this.longPullingUp = true
+                ltc.el.addClass('drag')
+                ltc.topSwitch.show()
             }
-            ltc.moveY(this.y + Math.max(this.height + C.ITEM_HEIGHT * 2, C.client.height + C.ITEM_HEIGHT));
+            ltc.moveY(
+                this.y +
+                    Math.max(
+                        this.height + C.ITEM_HEIGHT * 2,
+                        C.client.height + C.ITEM_HEIGHT
+                    )
+            )
 
             if (this.y < this.upperBound - C.ITEM_HEIGHT) {
                 if (!this.pastLongPullDownThreshold) {
-                    this.pastLongPullDownThreshold = true;
-                    ltc.topArrow.addClass('down');
+                    this.pastLongPullDownThreshold = true
+                    ltc.topArrow.addClass('down')
                 }
             } else {
                 if (this.pastLongPullDownThreshold) {
-                    this.pastLongPullDownThreshold = false;
-                    ltc.topArrow.removeClass('down');
+                    this.pastLongPullDownThreshold = false
+                    ltc.topArrow.removeClass('down')
                 }
             }
-
         } else {
             if (this.longPullingUp) {
-                this.longPullingUp = false;
-                ltc.topSwitch.hide();
-                ltc.moveY(C.client.height + C.ITEM_HEIGHT);
+                this.longPullingUp = false
+                ltc.topSwitch.hide()
+                ltc.moveY(C.client.height + C.ITEM_HEIGHT)
             }
         }
-
     },
 
+    /**
+     * @function
+     * @static
+     * @name listCollection.onDragEnd
+     */
     onDragEnd: function () {
-
-        this.resetDragStates();
+        this.resetDragStates()
 
         if (this.y >= C.ITEM_HEIGHT) {
-            this.createItemAtTop();
-            return;
+            this.createItemAtTop()
+            return
         } else if (this.y <= this.upperBound - C.ITEM_HEIGHT) {
-            this.onPullUp();
-            return; // cancel default bounce back
+            this.onPullUp()
+            return // cancel default bounce back
         } else if (this.y <= this.upperBound) {
             // pull up cancelled
-            var ltc = C.lastTodoCollection;
-            ltc.el.removeClass('drag').addClass('ease-out');
-            ltc.moveY(C.client.height + C.ITEM_HEIGHT);
+            var ltc = C.lastTodoCollection
+            ltc.el.removeClass('drag').addClass('ease-out')
+            ltc.moveY(C.client.height + C.ITEM_HEIGHT)
             ltc.onTransitionEnd(function () {
-                ltc.el.removeClass('ease-out');
-            });
+                ltc.el.removeClass('ease-out')
+            })
         }
 
-        this.base.onDragEnd.apply(this, arguments);
-
+        this.base.onDragEnd.apply(this, arguments)
     },
 
+    /**
+     * @function
+     * @static
+     * @name listCollection.onPullUp
+     */
     onPullUp: function () {
-        
-        var ltc = C.lastTodoCollection;
+        var ltc = C.lastTodoCollection
 
-        ltc.el.removeClass('drag');
-        ltc.moveY(0);
+        ltc.el.removeClass('drag')
+        ltc.moveY(0)
 
-        this.el.removeClass('drag');
-        this.moveY(Math.min(-this.height, -C.client.height) - C.ITEM_HEIGHT * 2);
+        this.el.removeClass('drag')
+        this.moveY(Math.min(-this.height, -C.client.height) - C.ITEM_HEIGHT * 2)
 
-        C.setCurrentCollection(ltc);
+        C.setCurrentCollection(ltc)
 
         ltc.onTransitionEnd(function () {
-            ltc.resetTopSwitch();
-        });
+            ltc.resetTopSwitch()
+        })
 
-        var t = this;
+        var t = this
         t.onTransitionEnd(function () {
-            t.positionForPulldown();
-        });
-
-    }
-
-};
+            t.positionForPulldown()
+        })
+    },
+}

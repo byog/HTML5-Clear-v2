@@ -1,6 +1,12 @@
+/**
+ * @classdesc app's unfolddummy
+ * @constructor UnfoldDummy
+ * @extends C
+ * @param options
+ */
 C.UnfoldDummy = function (options) {
-
-    this.el = $('<div class="item unfold-dummy">\
+    this.el = $(
+        '<div class="item unfold-dummy">\
         <div class="inner">\
             <div class="unfold top">\
                 <div class="item" style="padding-left: 12px"></div>\
@@ -8,21 +14,29 @@ C.UnfoldDummy = function (options) {
             <div class="unfold bot">\
                 <div class="item" style="padding-left: 12px"></div>\
             </div>\
-        </div>');
+        </div>'
+    )
 
-    this.style = this.el[0].style;
+    this.style = this.el[0].style
 
-    this.top = this.el.find('.top');
-    this.bot = this.el.find('.bot');
-    this.content = this.el.find('.item');
+    this.top = this.el.find('.top')
+
+    this.bot = this.el.find('.bot')
+
+    this.content = this.el.find('.item')
 
     if (options.content) {
-        this.content.text(options.content);
+        this.content.text(options.content)
     }
 
-    this.content.css('background-color', options.color);
-    this.moveY((options.order - 1) * C.ITEM_HEIGHT - 1);
+    this.content.css('background-color', options.color)
+    this.moveY((options.order - 1) * C.ITEM_HEIGHT - 1)
+}
 
-};
-
-C.UnfoldDummy.prototype.moveY = C.Item.moveY;
+/**
+ * @var {*}
+ * @static
+ * @name UnfoldDummy.moveY
+ * @default
+ */
+C.UnfoldDummy.prototype.moveY = C.Item.moveY

@@ -1,26 +1,44 @@
+/**
+ * @constructor
+ * @classdesc app's todocollection
+ * @param data
+ * @param listItem
+ * @name TodoCollection
+ * @extends C
+ */
 C.TodoCollection = function (data, listItem) {
-    
-    C.log('TodoCollection: init <' + data.title + '>');
+    C.log('TodoCollection: init <' + data.title + '>')
 
-    this.stateType = C.states.TODO_COLLECTION_VIEW;
-    this.base = C.Collection;
-    this.itemType = C.TodoItem;
-    this.itemTypeText = 'Item';
+    this.stateType = C.states.TODO_COLLECTION_VIEW
 
-    this.listItem = listItem || C.listCollection.getItemByOrder(data.order);
+    this.base = C.Collection
 
-    // apply shared init
-    this.base.init.apply(this, arguments);
+    this.itemType = C.TodoItem
 
-};
+    this.itemTypeText = 'Item'
 
+    this.listItem = listItem || C.listCollection.getItemByOrder(data.order)
+
+    this.base.init.apply(this, arguments)
+}
+
+/**
+ * @lends TodoCollection
+ */
 C.TodoCollection.prototype = {
-
+    /**
+     * @var {*}
+     * @default C.Collection
+     */
     __proto__: C.Collection,
 
+    /**
+     * @function
+     * @static
+     */
     render: function () {
-
-        this.el = $('<div class="collection">\
+        this.el = $(
+            '<div class="collection">\
                 <div class="top-switch">\
                     <img class="arrow" src="img/arrow.png"> <span class="text">Switch To Lists</span>\
                 </div>\
@@ -33,278 +51,310 @@ C.TodoCollection.prototype = {
                         <span class="title">Pull to Create Item</span>\
                     </div></div>\
                 </div>\
-            </div>');
+            </div>'
+        )
 
-        this.style = this.el[0].style;
+        this.style = this.el[0].style
 
         // top switch
-        this.topSwitch = this.el.find('.top-switch');
-        this.topArrow = this.topSwitch.find('.arrow');
-        this.topText = this.topSwitch.find('.text');
+        this.topSwitch = this.el.find('.top-switch')
+        this.topArrow = this.topSwitch.find('.arrow')
+        this.topText = this.topSwitch.find('.text')
 
         // bottom switch
-        this.bottomSwitch = this.el.find('.bottom-switch');
-        this.drawer = this.bottomSwitch.find('.drawer');
-        this.smallArrowStyle = this.bottomSwitch.find('.arrow-small')[0].style;
-
+        this.bottomSwitch = this.el.find('.bottom-switch')
+        this.drawer = this.bottomSwitch.find('.drawer')
+        this.smallArrowStyle = this.bottomSwitch.find('.arrow-small')[0].style
     },
 
+    /**
+     * @function
+     * @static
+     * @param {*} at
+     * @param {*} noAnimation
+     */
     load: function (at, noAnimation) {
+        this.initiated = true
 
-        this.initiated = true;
+        var t = this
 
-        var t = this;
-
-        t.updateColor();
-        t.resetTopSwitch();
+        t.updateColor()
+        t.resetTopSwitch()
 
         if (noAnimation) {
-
-            t.updatePosition();
-            t.el.appendTo(C.$wrapper);
-
+            t.updatePosition()
+            t.el.appendTo(C.$wrapper)
         } else {
-
             if (t.initiated) {
-                t.el.remove();
+                t.el.remove()
             }
 
             // move to match the position of the ListItem
-            t.moveY(at * C.ITEM_HEIGHT + C.listCollection.y);
+            t.moveY(at * C.ITEM_HEIGHT + C.listCollection.y)
             // squeeze all items at top
-            var i = t.items.length;
-            while (i--) { t.items[i].moveY(0) }
+            var i = t.items.length
+            while (i--) {
+                t.items[i].moveY(0)
+            }
 
-            t.el
-                .appendTo(C.$wrapper)
-                .removeClass('drag');
+            t.el.appendTo(C.$wrapper).removeClass('drag')
 
             // wait for repaint
             setTimeout(function () {
-
                 // move to top
-                t.moveY(0);
+                t.moveY(0)
                 // expand items to their right positions
-                t.updatePosition();
-
-            }, 0);
-
+                t.updatePosition()
+            }, 0)
         }
-
     },
 
+    /**
+     * @function
+     * @static
+     * @param {*} target
+     */
     floatUp: function (target) {
-
         var i = this.items.length,
             item,
-            below = target.data.order;
-        target.data.order = this.count - 1;
+            below = target.data.order
+        target.data.order = this.count - 1
 
         while (i--) {
-            item = this.items[i];
+            item = this.items[i]
             if (item === target) {
-                item.updateColor();
-                item.updatePosition(true);
+                item.updateColor()
+                item.updatePosition(true)
             } else if (item.data.done && item.data.order < below) {
-                item.data.order++;
-                item.updatePosition();
+                item.data.order++
+                item.updatePosition()
             } else {
-                item.updateColor();
+                item.updateColor()
             }
         }
-
     },
 
+    /**
+     * @function
+     * @static
+     */
     updateCount: function () {
-
-        this.listItem.count = this.count;
-        this.listItem.updateCount();
-        this.hasDoneItems = this.items.length > this.count;
-
+        this.listItem.count = this.count
+        this.listItem.updateCount()
+        this.hasDoneItems = this.items.length > this.count
     },
 
+    /**
+     * @function
+     * @static
+     */
     onDragMove: function () {
+        this.base.onDragMove.apply(this, arguments)
 
-        this.base.onDragMove.apply(this, arguments);
-
-        var lc = C.listCollection;
+        var lc = C.listCollection
 
         // long pull down
         if (this.y >= C.ITEM_HEIGHT * 2) {
             if (!this.longPullingDown) {
-                this.longPullingDown = true;
-                this.topSwitch.show();
-                this.topDummy.css('opacity', '0');
+                this.longPullingDown = true
+                this.topSwitch.show()
+                this.topDummy.css('opacity', '0')
             }
-            lc.moveY(this.y - lc.height - C.ITEM_HEIGHT * 2);
+            lc.moveY(this.y - lc.height - C.ITEM_HEIGHT * 2)
         } else {
             if (this.longPullingDown) {
-                this.longPullingDown = false;
-                this.topDummy.css('opacity', '1');
-                this.topSwitch.hide();
-                lc.moveY(-lc.height - C.ITEM_HEIGHT * 2);
+                this.longPullingDown = false
+                this.topDummy.css('opacity', '1')
+                this.topSwitch.hide()
+                lc.moveY(-lc.height - C.ITEM_HEIGHT * 2)
             }
         }
 
         // long pull up
         if (this.y < this.upperBound) {
-
             if (!this.longPullingUp) {
+                this.longPullingUp = true
 
-                this.longPullingUp = true;
-
-                var pos = Math.max(C.client.height, this.height + C.ITEM_HEIGHT) + C.ITEM_HEIGHT * 2;
-                this.bottomSwitch[0].style[C.client.transformProperty] = 'translate3d(0px,' + pos + 'px, 0px)';
-                this.bottomSwitch.show();
+                var pos =
+                    Math.max(C.client.height, this.height + C.ITEM_HEIGHT) +
+                    C.ITEM_HEIGHT * 2
+                this.bottomSwitch[0].style[C.client.transformProperty] =
+                    'translate3d(0px,' + pos + 'px, 0px)'
+                this.bottomSwitch.show()
 
                 if (this.hasDoneItems) {
-                    this.bottomSwitch.removeClass('empty');
-                    this.drawer.removeClass('full');
+                    this.bottomSwitch.removeClass('empty')
+                    this.drawer.removeClass('full')
                 } else {
-                    this.bottomSwitch.addClass('empty');
+                    this.bottomSwitch.addClass('empty')
                 }
             }
 
             // move the small arrow
             if (this.hasDoneItems) {
-                var offset = (this.upperBound - this.y) / (2 * C.ITEM_HEIGHT) * (C.ITEM_HEIGHT + 15);
-                this.smallArrowStyle[C.client.transformProperty] = 'translate3d(0,' + offset + 'px, 0)';
+                var offset =
+                    ((this.upperBound - this.y) / (2 * C.ITEM_HEIGHT)) *
+                    (C.ITEM_HEIGHT + 15)
+                this.smallArrowStyle[C.client.transformProperty] =
+                    'translate3d(0,' + offset + 'px, 0)'
             }
 
             // check threshold
             if (this.y < this.upperBound - C.ITEM_HEIGHT * 2) {
                 if (!this.pastLongPullUpThreshold) {
-                    this.pastLongPullUpThreshold = true;
-                    this.drawer.addClass('full');
+                    this.pastLongPullUpThreshold = true
+                    this.drawer.addClass('full')
                 }
             } else {
                 if (this.pastLongPullUpThreshold) {
-                    this.pastLongPullUpThreshold = false;
-                    this.drawer.removeClass('full');
+                    this.pastLongPullUpThreshold = false
+                    this.drawer.removeClass('full')
                 }
             }
-
         } else {
             if (this.longPullingUp) {
-                this.longPullingUp = false;
-                this.bottomSwitch.hide();
+                this.longPullingUp = false
+                this.bottomSwitch.hide()
             }
         }
-
     },
 
+    /**
+     * @function
+     * @static
+     */
     onDragEnd: function () {
-
-        this.resetDragStates();
+        this.resetDragStates()
 
         if (this.y >= C.ITEM_HEIGHT * 2) {
-            this.onPullDown();
-            return; // cancel default bounce back
+            this.onPullDown()
+            return // cancel default bounce back
         } else if (this.y >= C.ITEM_HEIGHT) {
-            this.createItemAtTop();
-            return;
+            this.createItemAtTop()
+            return
         } else if (this.y <= this.upperBound - C.ITEM_HEIGHT * 2) {
-            this.onPullUp();
+            this.onPullUp()
         }
 
-        this.base.onDragEnd.apply(this, arguments);
-
+        this.base.onDragEnd.apply(this, arguments)
     },
 
-    // go back up to list
+    /**
+     * go back up to list
+     * @function
+     * @static
+     */
     onPullDown: function () {
-
-        var lc = C.listCollection;
+        var lc = C.listCollection
 
         // show the faded item
-        var fadedItem = lc.getItemByOrder(lc.openedAt);
-        if (fadedItem) fadedItem.el.removeClass('fade');
+        var fadedItem = lc.getItemByOrder(lc.openedAt)
+        if (fadedItem) fadedItem.el.removeClass('fade')
 
-        lc.el.removeClass('drag');
-        lc.moveY(0);
+        lc.el.removeClass('drag')
+        lc.moveY(0)
 
-        this.el.removeClass('drag');
-        this.moveY(Math.max(lc.height, C.client.height) + C.ITEM_HEIGHT * 2);
+        this.el.removeClass('drag')
+        this.moveY(Math.max(lc.height, C.client.height) + C.ITEM_HEIGHT * 2)
 
-        C.setCurrentCollection(lc);
-        C.setLastTodoCollection(this);
+        C.setCurrentCollection(lc)
+        C.setLastTodoCollection(this)
 
-        var t = this;
+        var t = this
         t.onTransitionEnd(function () {
-            t.positionForPullUp();
-        });
-
+            t.positionForPullUp()
+        })
     },
 
-    // clear done items!
+    /**
+     * clear done items!
+     * @function
+     * @static
+     */
     onPullUp: function () {
-
-        if (!this.hasDoneItems) return;
+        if (!this.hasDoneItems) return
 
         // calculate the distance to drop
-        var dist;
-        var unDoneHeight = this.height - (this.items.length - this.count) * C.ITEM_HEIGHT;
+        var dist
+        var unDoneHeight =
+            this.height - (this.items.length - this.count) * C.ITEM_HEIGHT
         if (unDoneHeight > C.client.height) {
-            dist = C.ITEM_HEIGHT * 2;
+            dist = C.ITEM_HEIGHT * 2
         } else {
-            dist = C.client.height - unDoneHeight + C.ITEM_HEIGHT * 2;
+            dist = C.client.height - unDoneHeight + C.ITEM_HEIGHT * 2
         }
 
         // clear y'all
         var i = this.items.length,
-            item;
+            item
 
         while (i--) {
-            item = this.items[i];
+            item = this.items[i]
             if (item.data.done) {
-                item.clear(dist);
-                this.items.splice(i, 1);
-                C.db.deleteItem(item.data, this.data);
+                item.clear(dist)
+                this.items.splice(i, 1)
+                C.db.deleteItem(item.data, this.data)
             }
         }
 
-        this.hasDoneItems = false;
-        this.updateBounds(true);
+        this.hasDoneItems = false
+        this.updateBounds(true)
 
-        C.db.save();
-
+        C.db.save()
     },
 
+    /**
+     * @function
+     * @static
+     */
     onPinchInStart: function () {
-        console.log('pinchIn start');
+        console.log('pinchIn start')
     },
 
-    onPinchInMove: function (i, touch) {
+    /**
+     * @function
+     * @static
+     * @param {*} i
+     * @param {*} touch
+     */
+    onPinchInMove: function (i, touch) {},
 
-    },
-
+    /**
+     * @function
+     * @static
+     */
     onPinchInEnd: function () {
-        console.log('pinchIn end');
+        console.log('pinchIn end')
     },
 
+    /**
+     * @function
+     * @static
+     */
     onPinchInCancel: function () {
-        console.log('pinchIn cancelled');
+        console.log('pinchIn cancelled')
     },
 
+    /**
+     * @function
+     * @static
+     */
     positionForPullUp: function () {
-
-        this.el.addClass('drag');
-        this.moveY(C.client.height + C.ITEM_HEIGHT);
-        this.topText.text(this.data.title);
-        this.topArrow.removeClass('down');
-        this.topDummy
-            .hide()
-            .css('opacity', '1');
-        this.topDummyText.text('Pull to Create ' + this.itemTypeText);
-
+        this.el.addClass('drag')
+        this.moveY(C.client.height + C.ITEM_HEIGHT)
+        this.topText.text(this.data.title)
+        this.topArrow.removeClass('down')
+        this.topDummy.hide().css('opacity', '1')
+        this.topDummyText.text('Pull to Create ' + this.itemTypeText)
     },
 
+    /**
+     * @function
+     * @static
+     */
     resetTopSwitch: function () {
-
-        this.topSwitch.hide();
-        this.topText.text('Switch to Lists');
-        this.topArrow.removeClass('down');
-
-    }
-
-};
+        this.topSwitch.hide()
+        this.topText.text('Switch to Lists')
+        this.topArrow.removeClass('down')
+    },
+}
