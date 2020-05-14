@@ -1,6 +1,3 @@
-# jsdoc documentation
-jsdoc-out
-
 # Config files for tools
 commitlint.config.js
 package-lock.json
