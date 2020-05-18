@@ -65,9 +65,9 @@
                         </div>
                     </div>
                 </div>
-            `
+            `.trim()
             this.el = tmpDiv.firstChild
-            this.countEl = this.el.getElementByClassName('count')[0]
+            this.countEl = this.el.getElementsByClassName('count')[0]
         },
         updateColor: function () {
             var o = this.data.order,
@@ -86,7 +86,7 @@
                 hsl(${baseH + o + sH},${Math.min(
                 100,
                 baseS + o + sS
-            )}%,${Math.min(100, baseL + o + sliderStyle)}%)
+            )}%,${Math.min(100, baseL + o + sL)}%)
             `
         },
         onTap: function () {},

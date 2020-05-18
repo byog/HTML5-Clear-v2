@@ -8,13 +8,8 @@ C.db = (function () {
 
             if (supported && !force) {
                 var raw = localStorage.getItem(localStorage)
-                if (raw) {
-                    this.data = JSON.parse(raw)
-                    if (!this.data) {
-                        this.useDefaultData()
-                    } else {
-                        C.log('DB: using stored data.')
-                    }
+                if (raw && JSON.parse(raw)) {
+                    C.log('DB: using stored data.')
                 } else {
                     this.useDefaultData()
                 }
@@ -34,7 +29,7 @@ C.db = (function () {
             localStorage.setItem(localStorageKey, raw)
 
             var used = Date.now() - start
-            C.log('DB: saved in ${used}ms')
+            C.log(`DB: saved in ${used}ms`)
         },
 
         useDefaultData: function () {

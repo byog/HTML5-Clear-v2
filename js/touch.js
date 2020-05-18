@@ -100,6 +100,7 @@ C.touch = (function () {
 
             // only record two fingers
             // and ignore additional fingers if already in action
+            // pinch yet document, so there is 2
             if (touches.length >= 2 || currentAction) {
                 return
             }
@@ -123,9 +124,7 @@ C.touch = (function () {
             }
         })
 
-        C.$wrapper.addEventListener(start, function (e) {
-            
-        }
+        C.$wrapper.addEventListener(start, function (e) {})
     }
 
     var currentAction = {

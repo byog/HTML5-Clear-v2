@@ -15,6 +15,8 @@ C.listCollection = {
         // private init jobs
         this.updateColor()
         this.updatePosition()
+
+        this.openedAt = -1 // used to record currently opened list
     },
 
     render: function () {
@@ -40,5 +42,10 @@ C.listCollection = {
 
         this.el = tmpDiv.firstChild
         this.style = this.el.style
+    },
+
+    load: function () {
+        this.initiated = true
+        C.$wrapper.appendChild(this.el)
     },
 }

@@ -1,4 +1,5 @@
 # Config files for tools
+review/
 commitlint.config.js
 package-lock.json
 package.json

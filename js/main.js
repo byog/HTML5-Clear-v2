@@ -23,7 +23,7 @@ var C = {
         C.touch.init()
         C.listCollection.init()
 
-        // restore state 
+        // restore state
         var data = C.db.data,
             state = data.state,
             lists = data.items,
@@ -33,10 +33,10 @@ var C = {
             case C.states.LIST_COLLECTION_VIEW:
                 C.log('App: init at ListCollection.')
                 C.currentCollection = C.listCollection
-                break;
-        
+                break
+
             case C.states.TODO_COLLECTION_VIEW:
-                case.log(`App: init at TodoCollection with order: ${state.order}`)
+                C.log(`App: init at TodoCollection with order: ${state.order}`)
                 while (i--) {
                     if (lists[i].order === state.order) {
                         C.currentCollection = new C.TodoCollection(lists[i])
@@ -49,6 +49,21 @@ var C = {
                 C.log('App: init at ListCollection.')
                 C.currentCollection = C.listCollection
                 break
+        }
+
+        C.currentCollection.load(0, true) // passing in (position:0) and (noAnimation:true)
+
+        if (!C.listCollection.initiated) {
+            // if we started with a TodoCollection, load ListCollection and position it for pulldown
+            C.listCollection.positionPulldown()
+            C.listCollection.load()
+        } else {
+            // otherwise, load the last used todoCollection
+            C.lastTodoCollection = new C.TodoCollection(
+                lists[state.lastTodoCollection || 0]
+            )
+            C.lastTodoCollection.load(C.client.height + C.ITEM_HEIGHT, true)
+            C.lastTodoCollection.positionForPullUp()
         }
     },
 
@@ -69,3 +84,8 @@ var C = {
         console.log(msg)
     },
 }
+
+// boot up on page load
+window.addEventListener('DOMContentLoaded', function () {
+    C.init()
+})

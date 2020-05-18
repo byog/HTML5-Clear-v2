@@ -18,7 +18,7 @@ C.Item = (function (raf) {
 
             // cache references to elements and styles
             this.style = this.el.style
-            this.slider = this.el.getElementByClassName('slider')[0]
+            this.slider = this.el.getElementsByClassName('slider')[0]
             this.sliderStyle = this.slider.style
 
             // cross and check
@@ -40,8 +40,8 @@ C.Item = (function (raf) {
             this.checkO = 0
 
             // editing related
-            this.title = this.el.getElementByClassName('title')[0]
-            this.field = this.el.getElementByClassName('field')[0]
+            this.title = this.el.getElementsByClassName('title')[0]
+            this.field = this.el.getElementsByClassName('field')[0]
             var t = this
             this.field.addEventListener('blur', function () {
                 t.onEditDone()
@@ -99,7 +99,7 @@ C.Item = (function (raf) {
                 } else {
                     t.field.setAttribute('display', 'none')
                     t.title.removeAttribute('display')
-                    t.title.getElementByClassName('text')[0].textContent = val
+                    t.title.getElementsByClassName('text')[0].textContent = val
                     c.db.save()
                 }
             })

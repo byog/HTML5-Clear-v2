@@ -40,7 +40,7 @@ C.Collection = (function (raf) {
 
         initDummyItems: function () {
             // top dummy item
-            this.topDummy = this.el.getElementsByClassName('.dummy-item.top')[0]
+            this.topDummy = this.el.getElementsByClassName('dummy-item top')[0]
             this.topDummySlider = this.topDummy.getElementsByClassName(
                 'slider'
             )[0]
@@ -71,10 +71,11 @@ C.Collection = (function (raf) {
             newItem.collection = this
             newItem.updatePosition()
 
-            newItem.el.data('id', this.newIdFrom).appendTo(this.el)
+            newItem.el.dataset.id = this.newIdFrom
+            this.el.appendChild(newItem.el)
 
             this.items.push(newItem)
-            this.hash(this.newIdFrom) = newItem
+            this.hash[this.newIdFrom] = newItem
             this.newIdFrom++
             if (!newItem.data.done) {
                 this.count++
@@ -144,7 +145,7 @@ C.Collection = (function (raf) {
         updateBounds: function () {
             this.height = this.items.length * C.ITEM_HEIGHT
             this.upperBound = Math.min(
-                o,
+                0,
                 C.client.height - (this.height + C.ITEM_HEIGHT)
             )
 
