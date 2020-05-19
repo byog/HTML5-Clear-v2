@@ -11,7 +11,7 @@ C.Item = (function (raf) {
     return {
         init: function (data) {
             this.x = 0
-            this.y = data.order * C.Item
+            this.y = data.order * C.ITEM_HEIGHT
             this.data = data
 
             this.render()

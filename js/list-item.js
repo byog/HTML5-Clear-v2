@@ -48,7 +48,7 @@
         render: function () {
             var tmpDiv = document.createElement('div')
             tmpDiv.innerHTML = `
-                <div class="item list-item${this.count ? '' : 'empty'}">
+                <div class="item list-item ${this.count ? '' : 'empty'}">
                     <div class="slider">
                         <div class="inner">
                             <span class="title">
