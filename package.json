@@ -20,6 +20,8 @@
         "@commitlint/cli": "^8.3.5",
         "@commitlint/config-conventional": "^8.3.4",
         "eslint": "^7.2.0",
+        "eslint-config-airbnb": "^18.1.0",
+        "eslint-config-prettier": "^6.11.0",
         "husky": "^4.2.5",
         "lint-staged": "^10.2.9",
         "prettier": "2.0.5"
@@ -34,6 +36,7 @@
         "*.{js,css,md}": "prettier --write",
         "*.ts?(x)": [
             "prettier --parser=typescript --write"
-        ]
+        ],
+        "*.{js}": "eslint"
     }
 }
