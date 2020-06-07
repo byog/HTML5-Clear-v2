@@ -1,0 +1,39 @@
+{
+    "name": "html5-clear-v2",
+    "version": "1.0.0",
+    "description": "replica from html5-clear-app",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/byog/HTML5-Clear-v2.git"
+    },
+    "author": "lean",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/byog/HTML5-Clear-v2/issues"
+    },
+    "homepage": "https://github.com/byog/HTML5-Clear-v2#readme",
+    "devDependencies": {
+        "@commitlint/cli": "^8.3.5",
+        "@commitlint/config-conventional": "^8.3.4",
+        "eslint": "^7.2.0",
+        "husky": "^4.2.5",
+        "lint-staged": "^10.2.9",
+        "prettier": "2.0.5"
+    },
+    "husky": {
+        "hooks": {
+            "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged": {
+        "*.{js,css,md}": "prettier --write",
+        "*.ts?(x)": [
+            "prettier --parser=typescript --write"
+        ]
+    }
+}

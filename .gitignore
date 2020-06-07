@@ -1,8 +1,8 @@
 # Config files for tools
 review/
-commitlint.config.js
-package-lock.json
-package.json
+# commitlint.config.js
+# package-lock.json
+# package.json
 
 # Vscode
 .vscode/*
